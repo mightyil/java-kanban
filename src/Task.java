@@ -3,7 +3,7 @@ import java.util.Objects;
 public class Task {
     private String name;
     private String description;
-    private final int id;
+    private int id;
     private TaskStatus status;
 
     public Task(String name, String description, int id, TaskStatus status) {
@@ -56,6 +56,10 @@ public class Task {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public TaskStatus getStatus() {
