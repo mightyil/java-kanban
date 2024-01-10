@@ -29,4 +29,11 @@ public class Epic extends Task{
     public ArrayList<SubTask> getTasks() {
         return tasks;
     }
+
+    @Override
+    public String toString() {
+        return "Epic{" +
+                "tasks=" + tasks +
+                '}';
+    }
 }
