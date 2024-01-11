@@ -13,6 +13,7 @@ public class TaskManager {
 
     public void updateSubTask(SubTask subTask) {
         subTasks.put(subTask.getId(), subTask);
+        subTask.getOwner().updateSubTask(subTask);
     }
 
     public void updateEpic(Epic epic) {
@@ -99,5 +100,20 @@ public class TaskManager {
 
     public HashMap<Integer, Epic> getEpics() {
         return epics;
+    }
+
+    public void printBoard() {
+        if (tasks != null) {
+            for (Task task : tasks.values()) {
+                System.out.println(task);
+            }
+        }
+        if(epics != null) {
+            for (Epic epic : epics.values()) {
+                System.out.println(epic);
+
+            }
+        }
+
     }
 }

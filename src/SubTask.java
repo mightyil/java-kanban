@@ -4,7 +4,7 @@ public class SubTask extends Task{
     public SubTask(String name, String description, int id, TaskStatus status, Epic owner) {
         super(name, description, id, status);
         this.owner = owner;
-        this.owner.addSubTask(this);
+//        this.owner.addSubTask(this);
     }
 
     public SubTask(Task task, Epic owner) {
@@ -24,11 +24,11 @@ public class SubTask extends Task{
     @Override
     public String toString() {
         return "SubTask{" +
-                "owner=" + owner +
-                "name='" + getName() + '\'' +
+                "owner=" + owner.getId() +
+                ", name='" + getName() + '\'' +
                 ", description='" + getDescription() + '\'' +
                 ", id=" + getId() +
-                ", status=" + getStatus() +
+                ", status='" + getStatus() + '\'' +
                 '}';
     }
 }

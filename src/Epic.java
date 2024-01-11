@@ -3,14 +3,14 @@ import java.util.ArrayList;
 public class Epic extends Task{
     private ArrayList<SubTask> tasks;
 
-    public Epic(String name, String description, int id, TaskStatus status) {
-        super(name, description, id, status);
+    public Epic(String name, String description, int id) {
+        super(name, description, id, TaskStatus.NEW);
 
         tasks = new ArrayList<SubTask>();
     }
 
-    public Epic(String name, String description, int id, TaskStatus status, ArrayList<SubTask> subTasks) {
-        super(name, description, id, status);
+    public Epic(String name, String description, int id, ArrayList<SubTask> subTasks) {
+        super(name, description, id, TaskStatus.NEW);
 
         tasks = subTasks;
         for (SubTask subTask : subTasks) {
@@ -37,6 +37,16 @@ public class Epic extends Task{
 
     public void addSubTask(SubTask subTask) {
         tasks.add(subTask);
+        setStatus(checkStatus());
+    }
+
+    public void updateSubTask(SubTask subTask) {
+        for(SubTask task : tasks) {
+            if(task.getId() == subTask.getId()) {
+                tasks.set(tasks.indexOf(task), subTask);
+                break;
+            }
+        }
         setStatus(checkStatus());
     }
 
@@ -87,8 +97,15 @@ public class Epic extends Task{
 
     @Override
     public String toString() {
-        return "Epic{" +
-                "tasks=" + tasks +
-                '}';
+        String epic = "Epic{" +
+                "name='" + getName() + '\'' +
+                ", description='" + getDescription() + '\'' +
+                ", id=" + getId() +
+                ", status=" + getStatus() +
+                ", subTasks: \n";
+        for (SubTask subTask : tasks) {
+            epic += "\t" + subTask + "\n";
+        }
+        return epic + '}';
     }
 }
