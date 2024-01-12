@@ -8,9 +8,9 @@ public class TaskManager {
     private int lastId = 0;
 
     public void deleteAll() {
-        tasks.clear();
-        subTasks.clear();
-        epics.clear();
+        clearTasks();
+        clearEpics();
+        clearSubTasks();
     }
 
     public void deleteTaskById(int id) {
@@ -144,6 +144,5 @@ public class TaskManager {
         if (subTasks != null && subTasks.isEmpty()) {
             System.out.println("subTasks is empty");
         }
-
     }
 }
