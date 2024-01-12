@@ -50,46 +50,46 @@ public class Epic extends Task{
         setStatus(checkStatus());
     }
 
-//    public void deleteSubTask(SubTask subTask) {
-//        tasks.remove(subTask);
-//        setStatus(checkStatus());
-//    }
-
-    public TaskStatus checkStatus() {
-        boolean isNew = true;
-        boolean isDone = true;
-        for (SubTask task : tasks) {
-            TaskStatus status = task.getStatus();
-            if (status != TaskStatus.NEW) {
-                isNew = false;
-            }
-            if (status != TaskStatus.DONE) {
-                isDone = false;
-            }
-            if (!isDone && !isNew) {
-                return TaskStatus.IN_PROGRESS;
-            }
-        }
-        if(isNew) {
-            return TaskStatus.NEW;
-        } else {
-            return TaskStatus.DONE;
-        }
+    public void deleteSubTask(SubTask subTask) {
+        tasks.remove(subTask);
+        setStatus(checkStatus());
     }
 
-    //second version
 //    public TaskStatus checkStatus() {
-//        TaskStatus status = null;
+//        boolean isNew = true;
+//        boolean isDone = true;
 //        for (SubTask task : tasks) {
-//            if(status == null) {
-//                status = task.getStatus();
+//            TaskStatus status = task.getStatus();
+//            if (status != TaskStatus.NEW) {
+//                isNew = false;
 //            }
-//            if (task.getStatus() != status) {
+//            if (status != TaskStatus.DONE) {
+//                isDone = false;
+//            }
+//            if (!isDone && !isNew) {
 //                return TaskStatus.IN_PROGRESS;
 //            }
 //        }
-//        return status == null ? TaskStatus.NEW : status;
+//        if(isNew) {
+//            return TaskStatus.NEW;
+//        } else {
+//            return TaskStatus.DONE;
+//        }
 //    }
+
+//    second version
+    public TaskStatus checkStatus() {
+        TaskStatus status = null;
+        for (SubTask task : tasks) {
+            if(status == null) {
+                status = task.getStatus();
+            }
+            if (task.getStatus() != status) {
+                return TaskStatus.IN_PROGRESS;
+            }
+        }
+        return status == null ? TaskStatus.NEW : status;
+    }
 
     public ArrayList<SubTask> getSubTasks() {
         return tasks;

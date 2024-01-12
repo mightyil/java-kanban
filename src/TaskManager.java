@@ -7,6 +7,24 @@ public class TaskManager {
 
     private int lastId = 0;
 
+    public void deleteTaskById(int id) {
+        tasks.remove(id);
+    }
+
+    public void deleteSubTaskById(int id) {
+        SubTask deletedSubTask = subTasks.get(id);
+        subTasks.remove(id);
+        deletedSubTask.getOwner().deleteSubTask(deletedSubTask);
+    }
+
+    public void deleteEpic(int id) {
+        Epic deletedEpic = epics.get(id);
+        for (SubTask subTask : deletedEpic.getSubTasks()) {
+            subTasks.remove(subTask.getId());
+        }
+        epics.remove(id);
+    }
+
     public void updateTask(Task task) {
         tasks.put(task.getId(), task);
     }
