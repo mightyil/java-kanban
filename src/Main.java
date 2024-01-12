@@ -9,13 +9,13 @@ public class Main {
         manager.createTask(task);
         manager.printBoard();
 
-        System.out.println("Обновим таск");
+        System.out.println("\nОбновим таск");
         Task newTask = new Task("task one", "updated description of task one", task.getId(),
                 TaskStatus.IN_PROGRESS);
         manager.updateTask(newTask);
         manager.printBoard();
 
-        System.out.println("Создадим эпик");
+        System.out.println("\nСоздадим эпик");
         Epic epic = new Epic("epic one", "epics description", 0);
         manager.createEpic(epic);
         manager.printBoard();
@@ -71,5 +71,8 @@ public class Main {
         System.out.println("\nСверим сабтаски в менеджере и эпике");
         System.out.println(manager.getSubTasks().values());
 
+        System.out.println("\nУдалим остатки");
+        manager.deleteAll();
+        manager.printBoard();
     }
 }

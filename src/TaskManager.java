@@ -7,6 +7,12 @@ public class TaskManager {
 
     private int lastId = 0;
 
+    public void deleteAll() {
+        tasks.clear();
+        subTasks.clear();
+        epics.clear();
+    }
+
     public void deleteTaskById(int id) {
         tasks.remove(id);
     }
@@ -121,16 +127,22 @@ public class TaskManager {
     }
 
     public void printBoard() {
-        if (tasks != null) {
+        if (tasks != null && !tasks.isEmpty()) {
             for (Task task : tasks.values()) {
                 System.out.println(task);
             }
+        } else {
+            System.out.println("tasks is empty");
         }
-        if(epics != null) {
+        if(epics != null && !epics.isEmpty()) {
             for (Epic epic : epics.values()) {
                 System.out.println(epic);
-
             }
+        } else {
+            System.out.println("epics is empty");
+        }
+        if (subTasks != null && subTasks.isEmpty()) {
+            System.out.println("subTasks is empty");
         }
 
     }
