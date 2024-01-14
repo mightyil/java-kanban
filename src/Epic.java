@@ -9,6 +9,12 @@ public class Epic extends Task{
         tasks = new HashMap<>();
     }
 
+    public Epic(String name, String description) {
+        super(name, description, TaskStatus.NEW);
+
+        tasks = new HashMap<>();
+    }
+
     public void addSubTask(SubTask subTask) {
         tasks.put(subTask.getId(), subTask);
         setStatus(checkStatus());

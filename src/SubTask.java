@@ -6,8 +6,8 @@ public class SubTask extends Task{
         this.owner = owner;
     }
 
-    public SubTask(Task task, Epic owner) {
-        super(task.getName(), task.getDescription(), task.getId(), task.getStatus());
+    public SubTask(String name, String description, TaskStatus status, Epic owner) {
+        super(name, description, status);
         this.owner = owner;
     }
 

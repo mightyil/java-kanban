@@ -40,7 +40,12 @@ public class TaskManager {
         subTask.getOwner().updateSubTask(subTask);
     }
 
-    public void updateEpic(Epic epic) {
+    public void updateEpic(Epic epic) throws IllegalArgumentException{
+        for (SubTask subTask : epic.getSubTasks().values()) {
+            if (!subTasks.containsKey(subTask.getId())) {
+                throw new IllegalArgumentException("task placed in Epic that you are trying to add is missing from the manager");
+            }
+        }
         epics.put(epic.getId(), epic);
     }
 
