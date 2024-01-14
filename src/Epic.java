@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Epic extends Task{
@@ -49,8 +50,8 @@ public class Epic extends Task{
         return status == null ? TaskStatus.NEW : status;
     }
 
-    public HashMap<Integer, SubTask> getSubTasks() {
-        return tasks;
+    public ArrayList<SubTask> getSubTasks() {
+        return new ArrayList<>(tasks.values());
     }
 
     @Override

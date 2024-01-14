@@ -1,9 +1,10 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TaskManager {
-    private HashMap<Integer, Task> tasks;
-    private HashMap<Integer, SubTask> subTasks;
-    private HashMap<Integer, Epic> epics;
+    private final HashMap<Integer, Task> tasks = new HashMap<>();
+    private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
+    private final HashMap<Integer, Epic> epics = new HashMap<>();
 
     private int lastId = 0;
 
@@ -25,7 +26,7 @@ public class TaskManager {
 
     public void deleteEpic(int id) {
         Epic deletedEpic = epics.get(id);
-        for (SubTask subTask : deletedEpic.getSubTasks().values()) {
+        for (SubTask subTask : deletedEpic.getSubTasks()) {
             subTasks.remove(subTask.getId());
         }
         epics.remove(id);
@@ -41,7 +42,7 @@ public class TaskManager {
     }
 
     public void updateEpic(Epic epic) throws IllegalArgumentException{
-        for (SubTask subTask : epic.getSubTasks().values()) {
+        for (SubTask subTask : epic.getSubTasks()) {
             if (!subTasks.containsKey(subTask.getId())) {
                 throw new IllegalArgumentException("task placed in Epic that you are trying to add is missing from the manager");
             }
@@ -51,19 +52,19 @@ public class TaskManager {
 
     public int createTask(Task task) {
         task.setId(++lastId);
-        putTask(task);
+        tasks.put(lastId, task);
         return lastId;
     }
 
     public int createEpic(Epic epic) {
         epic.setId(++lastId);
-        putEpic(epic);
+        epics.put(lastId, epic);
         return lastId;
     }
 
     public int createSubTask(SubTask subTask) {
         subTask.setId(++lastId);
-        putSubTask(subTask);
+        subTasks.put(lastId, subTask);
         subTask.getOwner().addSubTask(subTask);
         return lastId;
     }
@@ -80,74 +81,71 @@ public class TaskManager {
         return epics.get(id);
     }
 
-    public void putTask(Task task) {
-        if (tasks == null) {
-            tasks = new HashMap<>();
-        }
-        tasks.put(task.getId(), task);
-    }
-
-    public void putSubTask(SubTask subTask) {
-        if (subTasks == null) {
-            subTasks = new HashMap<>();
-        }
-        subTasks.put(subTask.getId(), subTask);
-    }
-
-    public void putEpic(Epic epic) {
-        if (epics == null) {
-            epics = new HashMap<>();
-        }
-        epics.put(epic.getId(), epic);
-    }
-
     public void clearTasks() {
-        if(tasks != null) {
             tasks.clear();
-        }
     }
 
     public void clearSubTasks() {
-        if(subTasks != null) {
             subTasks.clear();
-        }
     }
 
     public void clearEpics() {
-        if(epics != null) {
+            clearSubTasks();
             epics.clear();
-        }
     }
 
-    public HashMap<Integer, Task> getTasks() {
-        return tasks;
+    public ArrayList<Task> getTasks() {
+        return new ArrayList<>(tasks.values());
     }
 
-    public HashMap<Integer, SubTask> getSubTasks() {
-        return subTasks;
+    public ArrayList<SubTask> getSubTasks() {
+        return new ArrayList<>(subTasks.values());
     }
 
-    public HashMap<Integer, Epic> getEpics() {
-        return epics;
+    public ArrayList<Epic> getEpics() {
+        return new ArrayList<>(epics.values());
     }
 
-    public void printBoard() {
-        if (tasks != null && !tasks.isEmpty()) {
+    public void oldPrintBoard() {
+        if (!tasks.isEmpty()) {
             for (Task task : tasks.values()) {
                 System.out.println(task);
             }
         } else {
             System.out.println("tasks is empty");
         }
-        if(epics != null && !epics.isEmpty()) {
+        if(!epics.isEmpty()) {
             for (Epic epic : epics.values()) {
                 System.out.println(epic);
             }
         } else {
             System.out.println("epics is empty");
         }
-        if (subTasks != null && subTasks.isEmpty()) {
+        if (subTasks.isEmpty()) {
             System.out.println("subTasks is empty");
         }
+    }
+
+    public void printBoard() {
+        printList(getTasks());
+        printList(getEpics());
+        printList(getSubTasks());
+    }
+
+    public <T> void printList(ArrayList<T> taskList) {
+        if (!taskList.isEmpty()) {
+            for (T task : taskList) {
+                System.out.println(task);
+            }
+        }
+    }
+    //как получить имя класса для сообщения о том что список пуст не придумал :(
+
+    public ArrayList<SubTask> getEpicsSubTasks(Epic epic) {
+        return epic.getSubTasks();
+    }
+
+    public ArrayList<SubTask> getEpicsSubTasks(int id) {
+        return epics.get(id).getSubTasks();
     }
 }

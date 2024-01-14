@@ -44,11 +44,6 @@ public class Main {
         manager.updateSubTask(newSubTask2);
         manager.printBoard();
 
-        System.out.println("\nСверим сабтаски в менеджере и эпике");
-        System.out.println(manager.getSubTasks().values());
-
-
-
         System.out.println("\nСоздадим ещё один эпик с сабтасками");
         epic = new Epic("epic two", "epics two description");
         manager.createEpic(epic);
@@ -67,9 +62,6 @@ public class Main {
         manager.deleteSubTaskById(8);
         manager.deleteEpic(2);
         manager.printBoard();
-
-        System.out.println("\nСверим сабтаски в менеджере и эпике");
-        System.out.println(manager.getSubTasks().values());
 
         System.out.println("\nУдалим остатки");
         manager.deleteAll();
