@@ -1,40 +1,24 @@
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Epic extends Task{
-    private final ArrayList<SubTask> tasks;
+    private final HashMap<Integer, SubTask> tasks;
 
     public Epic(String name, String description, int id) {
         super(name, description, id, TaskStatus.NEW);
 
-        tasks = new ArrayList<>();
-    }
-
-    public Epic(Task task) {
-        super(task.getName(), task.getDescription(), task.getId(), TaskStatus.NEW);
-
-        tasks = new ArrayList<>();
-    }
-
-    public Epic (Epic epic, ArrayList<SubTask> subTasks) {
-        super(epic.getName(), epic.getDescription(), epic.getId(), TaskStatus.NEW);
-
-        tasks = subTasks;
-
-        for (SubTask subTask : subTasks) {
-            subTask.setOwner(this);
-        }
-        setStatus(checkStatus());
+        tasks = new HashMap<>();
     }
 
     public void addSubTask(SubTask subTask) {
-        tasks.add(subTask);
+        tasks.put(subTask.getId(), subTask);
         setStatus(checkStatus());
     }
 
     public void updateSubTask(SubTask subTask) {
-        for(SubTask task : tasks) {
-            if(task.getId() == subTask.getId()) {
-                tasks.set(tasks.indexOf(task), subTask);
+        for (SubTask task : tasks.values()) {
+            int taskId = task.getId();
+            if (taskId == subTask.getId()) {
+                tasks.replace(taskId, subTask);
                 break;
             }
         }
@@ -42,14 +26,14 @@ public class Epic extends Task{
     }
 
     public void deleteSubTask(SubTask subTask) {
-        tasks.remove(subTask);
+        tasks.remove(subTask.getId());
         setStatus(checkStatus());
     }
 
     public TaskStatus checkStatus() {
         TaskStatus status = null;
-        for (SubTask task : tasks) {
-            if(status == null) {
+        for (SubTask task : tasks.values()) {
+            if (status == null) {
                 status = task.getStatus();
             }
             if (task.getStatus() != status) {
@@ -59,7 +43,7 @@ public class Epic extends Task{
         return status == null ? TaskStatus.NEW : status;
     }
 
-    public ArrayList<SubTask> getSubTasks() {
+    public HashMap<Integer, SubTask> getSubTasks() {
         return tasks;
     }
 
@@ -71,7 +55,7 @@ public class Epic extends Task{
                 ", id=" + getId() +
                 ", status=" + getStatus() +
                 ", subTasks: \n";
-        for (SubTask subTask : tasks) {
+        for (SubTask subTask : tasks.values()) {
             epic += "\t" + subTask + "\n";
         }
         return epic + '}';

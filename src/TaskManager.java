@@ -25,7 +25,7 @@ public class TaskManager {
 
     public void deleteEpic(int id) {
         Epic deletedEpic = epics.get(id);
-        for (SubTask subTask : deletedEpic.getSubTasks()) {
+        for (SubTask subTask : deletedEpic.getSubTasks().values()) {
             subTasks.remove(subTask.getId());
         }
         epics.remove(id);
