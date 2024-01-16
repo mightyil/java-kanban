@@ -22,13 +22,7 @@ public class Epic extends Task{
     }
 
     public void updateSubTask(SubTask subTask) {
-        for (SubTask task : tasks.values()) {
-            int taskId = task.getId();
-            if (taskId == subTask.getId()) {
-                tasks.replace(taskId, subTask);
-                break;
-            }
-        }
+        tasks.replace(subTask.getId(), subTask);
         setStatus(checkStatus());
     }
 

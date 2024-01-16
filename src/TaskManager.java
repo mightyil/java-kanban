@@ -106,46 +106,33 @@ public class TaskManager {
         return new ArrayList<>(epics.values());
     }
 
-    public void oldPrintBoard() {
-        if (!tasks.isEmpty()) {
-            for (Task task : tasks.values()) {
-                System.out.println(task);
-            }
-        } else {
-            System.out.println("tasks is empty");
-        }
-        if(!epics.isEmpty()) {
-            for (Epic epic : epics.values()) {
-                System.out.println(epic);
-            }
-        } else {
-            System.out.println("epics is empty");
-        }
-        if (subTasks.isEmpty()) {
-            System.out.println("subTasks is empty");
-        }
-    }
-
     public void printBoard() {
-        printList(getTasks());
-        printList(getEpics());
-        printList(getSubTasks());
+        printList(getTasks(), "tasks");
+        printList(getEpics(), "epics");
+        printList(getSubTasks(), "subTasks");
     }
 
-    public <T> void printList(ArrayList<T> taskList) {
+    public <T> void printList(ArrayList<T> taskList, String listName) {
         if (!taskList.isEmpty()) {
             for (T task : taskList) {
                 System.out.println(task);
             }
+        } else {
+            System.out.println(listName + " is empty");
         }
     }
-    //как получить имя класса для сообщения о том что список пуст не придумал :(
 
     public ArrayList<SubTask> getEpicsSubTasks(Epic epic) {
         return epic.getSubTasks();
     }
 
     public ArrayList<SubTask> getEpicsSubTasks(int id) {
-        return epics.get(id).getSubTasks();
+        Epic epic = epics.get(id);
+        if (epic != null) {
+            return epics.get(id).getSubTasks();
+        } else {
+            System.out.println("Epic with id " + id + " does not exist");
+            return null;
+        }
     }
 }
