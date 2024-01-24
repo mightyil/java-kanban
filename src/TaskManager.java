@@ -42,4 +42,6 @@ public interface TaskManager {
     ArrayList<SubTask> getEpicsSubTasks(Epic epic);
 
     ArrayList<SubTask> getEpicsSubTasks(int id);
+
+    ArrayList<Task> getHistory();
 }
