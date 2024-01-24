@@ -1,138 +1,45 @@
 import java.util.ArrayList;
-import java.util.HashMap;
 
-public class TaskManager {
-    private final HashMap<Integer, Task> tasks = new HashMap<>();
-    private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
-    private final HashMap<Integer, Epic> epics = new HashMap<>();
+public interface TaskManager {
+    void deleteAll();
 
-    private int lastId = 0;
+    void deleteTaskById(int id);
 
-    public void deleteAll() {
-        clearTasks();
-        clearEpics();
-        clearSubTasks();
-    }
+    void deleteSubTaskById(int id);
 
-    public void deleteTaskById(int id) {
-        tasks.remove(id);
-    }
+    void deleteEpic(int id);
 
-    public void deleteSubTaskById(int id) {
-        SubTask deletedSubTask = subTasks.get(id);
-        subTasks.remove(id);
-        deletedSubTask.getOwner().deleteSubTask(deletedSubTask);
-    }
+    void updateTask(Task task);
 
-    public void deleteEpic(int id) {
-        Epic deletedEpic = epics.get(id);
-        for (SubTask subTask : deletedEpic.getSubTasks()) {
-            subTasks.remove(subTask.getId());
-        }
-        epics.remove(id);
-    }
+    void updateSubTask(SubTask subTask);
 
-    public void updateTask(Task task) {
-        tasks.put(task.getId(), task);
-    }
+    void updateEpic(Epic epic) throws IllegalArgumentException;
 
-    public void updateSubTask(SubTask subTask) {
-        subTasks.put(subTask.getId(), subTask);
-        subTask.getOwner().updateSubTask(subTask);
-    }
+    int createTask(Task task);
 
-    public void updateEpic(Epic epic) throws IllegalArgumentException{
-        for (SubTask subTask : epic.getSubTasks()) {
-            if (!subTasks.containsKey(subTask.getId())) {
-                throw new IllegalArgumentException("task placed in Epic that you are trying to add is missing from the manager");
-            }
-        }
-        epics.put(epic.getId(), epic);
-    }
+    int createEpic(Epic epic);
 
-    public int createTask(Task task) {
-        task.setId(++lastId);
-        tasks.put(lastId, task);
-        return lastId;
-    }
+    int createSubTask(SubTask subTask);
 
-    public int createEpic(Epic epic) {
-        epic.setId(++lastId);
-        epics.put(lastId, epic);
-        return lastId;
-    }
+    Task getTaskById(int id);
 
-    public int createSubTask(SubTask subTask) {
-        subTask.setId(++lastId);
-        subTasks.put(lastId, subTask);
-        subTask.getOwner().addSubTask(subTask);
-        return lastId;
-    }
+    SubTask getSubTaskById(int id);
 
-    public Task getTaskById(int id) {
-        return tasks.get(id);
-    }
+    Epic getEpicById(int id);
 
-    public SubTask getSubTaskById(int id) {
-        return subTasks.get(id);
-    }
+    void clearTasks();
 
-    public Epic getEpicById(int id) {
-        return epics.get(id);
-    }
+    void clearSubTasks();
 
-    public void clearTasks() {
-            tasks.clear();
-    }
+    void clearEpics();
 
-    public void clearSubTasks() {
-            subTasks.clear();
-    }
+    ArrayList<Task> getTasks();
 
-    public void clearEpics() {
-            clearSubTasks();
-            epics.clear();
-    }
+    ArrayList<SubTask> getSubTasks();
 
-    public ArrayList<Task> getTasks() {
-        return new ArrayList<>(tasks.values());
-    }
+    ArrayList<Epic> getEpics();
 
-    public ArrayList<SubTask> getSubTasks() {
-        return new ArrayList<>(subTasks.values());
-    }
+    ArrayList<SubTask> getEpicsSubTasks(Epic epic);
 
-    public ArrayList<Epic> getEpics() {
-        return new ArrayList<>(epics.values());
-    }
-
-    public void printBoard() {
-        printList(getTasks(), "tasks");
-        printList(getEpics(), "epics");
-        printList(getSubTasks(), "subTasks");
-    }
-
-    public <T> void printList(ArrayList<T> taskList, String listName) {
-        if (!taskList.isEmpty()) {
-            for (T task : taskList) {
-                System.out.println(task);
-            }
-        } else {
-            System.out.println(listName + " is empty");
-        }
-    }
-
-    public ArrayList<SubTask> getEpicsSubTasks(Epic epic) {
-        return epic.getSubTasks();
-    }
-
-    public ArrayList<SubTask> getEpicsSubTasks(int id) {
-        Epic epic = epics.get(id);
-        if (epic != null) {
-            return epics.get(id).getSubTasks();
-        } else {
-            System.out.println("Epic with id " + id + " does not exist");
-            return null;
-        }
-    }
+    ArrayList<SubTask> getEpicsSubTasks(int id);
 }

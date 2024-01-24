@@ -2,7 +2,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception{
 
-        TaskManager manager = new TaskManager();
+        InMemoryTaskManager manager = new InMemoryTaskManager();
 
         System.out.println("Cоздадим таск");
         Task task = new Task("task one", "description of task one", TaskStatus.NEW);
