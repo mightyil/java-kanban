@@ -1,12 +1,13 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, Task> tasks = new HashMap<>();
     private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
     private final HashMap<Integer, Epic> epics = new HashMap<>();
 
-    private final ArrayList<Task> history = new ArrayList<>();
+    HistoryManager history = Managers.getDefaultHistory();
 
     private int lastId = 0;
 
@@ -84,20 +85,21 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getTaskById(int id) {
         Task task = tasks.get(id);
-        addInHistory(task);
+        history.add(task);
         return task;
     }
 
     @Override
     public SubTask getSubTaskById(int id) {
         SubTask subTask = subTasks.get(id);
-        addInHistory(subTask);
+        history.add(subTask);
         return subTask;
     }
 
     @Override
     public Epic getEpicById(int id) {
         Epic epic = epics.get(id);
+        history.add(epic);
         return epic;
     }
 
@@ -132,22 +134,6 @@ public class InMemoryTaskManager implements TaskManager {
         return new ArrayList<>(epics.values());
     }
 
-    public void printBoard() {
-        printList(getTasks(), "tasks");
-        printList(getEpics(), "epics");
-        printList(getSubTasks(), "subTasks");
-    }
-
-    public <T> void printList(ArrayList<T> taskList, String listName) {
-        if (!taskList.isEmpty()) {
-            for (T task : taskList) {
-                System.out.println(task);
-            }
-        } else {
-            System.out.println(listName + " is empty");
-        }
-    }
-
     @Override
     public ArrayList<SubTask> getEpicsSubTasks(Epic epic) {
         return epic.getSubTasks();
@@ -164,15 +150,8 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    @Override
-    public ArrayList<Task> getHistory() {
-        return history;
+    public List<Task> getHistory() {
+        return history.getHistory();
     }
 
-    private <T extends Task> void addInHistory(T task) {
-        if (history.size() == 10) {
-            history.remove(0);
-        }
-        history.add(task);
-    }
 }
