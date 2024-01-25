@@ -67,7 +67,7 @@ public class Main {
         System.out.println("\nУдалим по-одному таску, сабтаску и эпику");
         manager.deleteTaskById(1);
         manager.deleteSubTaskById(8);
-        manager.deleteEpic(2);
+        manager.deleteEpicById(2);
         printAllTasks(manager);
 
         System.out.println("\nУдалим остатки");
