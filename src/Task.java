@@ -76,7 +76,4 @@ public class Task {
         this.status = status;
     }
 
-    public String getClassName() {
-        return "Task";
-    }
 }
