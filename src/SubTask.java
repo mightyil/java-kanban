@@ -29,4 +29,9 @@ public class SubTask extends Task{
                 ", status='" + getStatus() + '\'' +
                 '}';
     }
+
+
+    public SubTask copy() {
+        return new SubTask(getName(), getDescription(), getId(), getStatus(), getOwner());
+    }
 }

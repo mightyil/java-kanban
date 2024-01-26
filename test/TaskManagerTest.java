@@ -1,8 +1,6 @@
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -150,18 +148,121 @@ public class TaskManagerTest {
                 TaskStatus.NEW,
                 epic
         );
-        int subTaskId = taskManager.createSubTask(subTask);
+        taskManager.createSubTask(subTask);
 
         final List<Epic> epics = taskManager.getEpics();
         final List<SubTask> subTasks = taskManager.getSubTasks();
 
-        assertEquals(epic, epics.get(0), "Эипк не сохранён");
+        assertEquals(epic, epics.get(0), "Эпик не сохранён");
         assertEquals(subTask, subTasks.get(0), "Подзадача не сохранена");
 
 
         taskManager.deleteEpicById(epicId);
 
-        assertEquals(0, taskManager.getEpics().size(), "Список подзадач не пуст");
+        assertEquals(0, taskManager.getEpics().size(), "Список эпиков не пуст");
         assertEquals(0, taskManager.getSubTasks().size(), "Список подзадач не пуст");
+    }
+
+    @Test
+    void updateTask() {
+        Task task = new Task("Test task", "Test task description", TaskStatus.NEW);
+        int taskId = taskManager.createTask(task);
+
+        final List<Task> tasks = taskManager.getTasks();
+        Task savedTask = tasks.get(0);
+
+        assertEquals(task, savedTask, "Задача не сохранена");
+
+        Task newTask = new Task("Test new task", "Test new task description", taskId, TaskStatus.NEW);
+        taskManager.updateTask(newTask);
+
+        final List<Task> newTasks = taskManager.getTasks();
+        Task newSavedTask = newTasks.get(0);
+
+        assertNotEquals(savedTask, newSavedTask, "Задача не обновлена");
+        assertEquals(newTask, newSavedTask, "Задача не обновлена корректно");
+    }
+
+    @Test
+    void updateSubTask() {
+        Epic epic = new Epic("Test epic", "Test epic description");
+        taskManager.createEpic(epic);
+
+        SubTask subTask = new SubTask(
+                "Test subTask",
+                "Test subTask description",
+                TaskStatus.NEW,
+                epic
+        );
+        int subTaskId = taskManager.createSubTask(subTask);
+
+        final List<SubTask> subTasks = taskManager.getSubTasks();
+        Task savedSubTask = subTasks.get(0);
+
+        assertEquals(subTask, savedSubTask, "Задача не сохранена");
+
+        SubTask newSubTask = new SubTask(
+                "Test new subTask",
+                "Test new subTask description",
+                subTaskId,
+                TaskStatus.NEW,
+                epic
+        );
+        taskManager.updateSubTask(newSubTask);
+
+        final List<SubTask> newSubTasks = taskManager.getSubTasks();
+        Task newSavedSubTask = newSubTasks.get(0);
+
+        assertNotEquals(savedSubTask, newSavedSubTask, "Подзадача не обновлена");
+        assertEquals(newSubTask, newSavedSubTask, "Подзадача не обновлена корректно");
+    }
+
+    @Test
+    void updateEpic() {
+        Epic epic = new Epic("Test epic", "Test epic description");
+        int epicId = taskManager.createEpic(epic);
+
+        SubTask subTask = new SubTask(
+                "Test subTask",
+                "Test subTask description",
+                TaskStatus.NEW,
+                epic
+        );
+        taskManager.createSubTask(subTask);
+
+        final List<Epic> epics = taskManager.getEpics();
+        final List<SubTask> subTasks = taskManager.getSubTasks();
+
+        assertEquals(epic, epics.get(0), "Эпик не сохранён");
+        assertEquals(subTask, subTasks.get(0), "Подзадача не сохранена");
+
+        Epic newEpic = new Epic("Test new epic", "Test new epic description", epicId);
+        SubTask newSubTask = new SubTask(
+                "Test new subTask",
+                "Test new subTask description",
+                TaskStatus.NEW,
+                newEpic
+        );
+        taskManager.createSubTask(newSubTask);
+        newEpic.addSubTask(newSubTask);
+
+        taskManager.updateEpic(newEpic);
+
+        Epic newSavedEpic = taskManager.getEpics().get(0);
+        final List<SubTask> newSavedEpicsSubTasks = taskManager.getEpicsSubTasks(newSavedEpic);
+
+        assertNotEquals(epic, newSavedEpic, "Эпик не обновлён");
+        assertEquals(newEpic, newSavedEpic, "Эпик не обновлён");
+        assertNotEquals(
+                epic.getSubTasks().get(0),
+                newSavedEpicsSubTasks.get(0),
+                "Подзадачи эпика не обновлены"
+        );
+        assertEquals(
+                newEpic.getSubTasks().get(0),
+                newSavedEpicsSubTasks.get(0),
+                "Подзадачи эпика не обновлены"
+        );
+
     }
 }

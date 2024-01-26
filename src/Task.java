@@ -76,4 +76,7 @@ public class Task {
         this.status = status;
     }
 
+    public Task copy() {
+        return new Task(name, description, id, status);
+    }
 }

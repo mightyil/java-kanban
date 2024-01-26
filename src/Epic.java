@@ -61,4 +61,12 @@ public class Epic extends Task{
         }
         return epic + '}';
     }
+
+    public Epic copy() {
+        Epic copyEpic = new Epic(getName(), getDescription(), getId());
+        for (SubTask subTask : tasks.values()) {
+            copyEpic.addSubTask(subTask);
+        }
+        return copyEpic;
+    }
 }
