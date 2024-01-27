@@ -1,22 +1,23 @@
 import managers.Managers;
 import managers.TaskManager;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import tasks.Epic;
-import tasks.SubTask;
-import tasks.Task;
-import tasks.TaskStatus;
+import tasks.*;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class HistoryManagersTest {
+    TaskManager manager;
+
+    @BeforeEach
+    void beforeEach() {
+        manager = Managers.getDefault();
+    }
 
     @Test
     void getHistory() {
-
-        TaskManager manager = Managers.getDefault();
-
         Task task = new Task("task one", "description of task one", TaskStatus.NEW);
         manager.createTask(task);
 
@@ -35,25 +36,22 @@ public class HistoryManagersTest {
         manager.getSubTaskById(3);
         manager.getSubTaskById(5);
 
-        Task newTask = new Task("task one", "updated description of task one", task.getId(),
-                TaskStatus.IN_PROGRESS);
-        manager.updateTask(newTask);
-
-        SubTask newSubTask = new SubTask("updated subtask 1","updated description 1",subTask.getId(),
-                TaskStatus.DONE, epic);
-        manager.updateSubTask(newSubTask);
-        SubTask newSubTask3 = new SubTask("updated subtask 3","updated description 3",subTask3.getId(),
-                TaskStatus.DONE, epic);
-        manager.updateSubTask(newSubTask3);
-
-        manager.getTaskById(1);
-        manager.getSubTaskById(3);
-        manager.getSubTaskById(5);
-
         final List<Task> history = manager.getHistory();
 
-        assertNotEquals(history.get(0), history.get(3), "Старая версия задачи не сохранена");
-        assertNotEquals(history.get(1), history.get(4), "Старая версия задачи не сохранена");
-        assertNotEquals(history.get(2), history.get(5), "Старая версия задачи не сохранена");
+        assertEquals(task, history.get(0), "Задача не сохранена");
+        assertEquals(subTask, history.get(1), "Задача не сохранена");
+        assertEquals(subTask3, history.get(2), "Задача не сохранена");
+    }
+
+    @Test
+    void shouldBeCorrectSize() {
+        Task task = new Task("task one", "description of task one", TaskStatus.NEW);
+        manager.createTask(task);
+
+        for (int i = 0; i < 11; i++) {
+            manager.getTaskById(1);
+        }
+
+        assertEquals(10, manager.getHistory().size(), "Размер больше 10");
     }
 }

@@ -1,8 +1,6 @@
 package managers;
 
-import tasks.Epic;
-import tasks.SubTask;
-import tasks.Task;
+import tasks.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,6 +56,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateEpic(Epic epic) throws IllegalArgumentException{
+        for (SubTask subTask : epics.get(epic.getId()).getSubTasks()) {
+            epic.updateSubTask(subTask);
+        }
         for (SubTask subTask : epic.getSubTasks()) {
             if (!subTasks.containsKey(subTask.getId())) {
                 throw new IllegalArgumentException("Epic that you are trying to add is missing from the manager");

@@ -24,7 +24,7 @@ public class Epic extends Task{
     }
 
     public void updateSubTask(SubTask subTask) {
-        tasks.replace(subTask.getId(), subTask);
+        tasks.put(subTask.getId(), subTask);
         setStatus(checkStatus());
     }
 

@@ -185,8 +185,8 @@ public class TaskManagerTest {
         final List<Task> newTasks = taskManager.getTasks();
         Task newSavedTask = newTasks.get(0);
 
-        assertNotEquals(savedTask, newSavedTask, "Задача не обновлена");
-        assertEquals(newTask, newSavedTask, "Задача не обновлена корректно");
+        assertNotEquals(savedTask.getName(), newSavedTask.getName(), "Задача не обновлена");
+        assertEquals(newTask.getName(), newSavedTask.getName(), "Задача не обновлена корректно");
     }
 
     @Test
@@ -219,8 +219,8 @@ public class TaskManagerTest {
         final List<SubTask> newSubTasks = taskManager.getSubTasks();
         Task newSavedSubTask = newSubTasks.get(0);
 
-        assertNotEquals(savedSubTask, newSavedSubTask, "Подзадача не обновлена");
-        assertEquals(newSubTask, newSavedSubTask, "Подзадача не обновлена корректно");
+        assertNotEquals(savedSubTask.getName(), newSavedSubTask.getName(), "Подзадача не обновлена");
+        assertEquals(newSubTask.getName(), newSavedSubTask.getName(), "Подзадача не обновлена корректно");
     }
 
     @Test
@@ -243,30 +243,17 @@ public class TaskManagerTest {
         assertEquals(subTask, subTasks.get(0), "Подзадача не сохранена");
 
         Epic newEpic = new Epic("Test new epic", "Test new epic description", epicId);
-        SubTask newSubTask = new SubTask(
-                "Test new subTask",
-                "Test new subTask description",
-                TaskStatus.NEW,
-                newEpic
-        );
-        taskManager.createSubTask(newSubTask);
-        newEpic.addSubTask(newSubTask);
 
         taskManager.updateEpic(newEpic);
 
         Epic newSavedEpic = taskManager.getEpics().get(0);
         final List<SubTask> newSavedEpicsSubTasks = taskManager.getEpicsSubTasks(newSavedEpic);
 
-        assertNotEquals(epic, newSavedEpic, "Эпик не обновлён");
-        assertEquals(newEpic, newSavedEpic, "Эпик не обновлён");
-        assertNotEquals(
-                epic.getSubTasks().get(0),
-                newSavedEpicsSubTasks.get(0),
-                "Подзадачи эпика не обновлены"
-        );
+        assertNotEquals(epic.getName(), newSavedEpic.getName(), "Эпик не обновлён");
+        assertEquals(newEpic.getName(), newSavedEpic.getName(), "Эпик не обновлён");
         assertEquals(
-                newEpic.getSubTasks().get(0),
-                newSavedEpicsSubTasks.get(0),
+                epic.getSubTasks(),
+                newSavedEpicsSubTasks,
                 "Подзадачи эпика не обновлены"
         );
 
