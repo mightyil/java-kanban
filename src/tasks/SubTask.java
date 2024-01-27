@@ -1,3 +1,5 @@
+package tasks;
+
 public class SubTask extends Task{
     private Epic owner;
 
@@ -21,7 +23,7 @@ public class SubTask extends Task{
 
     @Override
     public String toString() {
-        return "SubTask{" +
+        return "tasks.SubTask{" +
                 "owner=" + owner.getId() +
                 ", name='" + getName() + '\'' +
                 ", description='" + getDescription() + '\'' +

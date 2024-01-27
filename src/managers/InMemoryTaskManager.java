@@ -1,3 +1,9 @@
+package managers;
+
+import tasks.Epic;
+import tasks.SubTask;
+import tasks.Task;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +60,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateEpic(Epic epic) throws IllegalArgumentException{
         for (SubTask subTask : epic.getSubTasks()) {
             if (!subTasks.containsKey(subTask.getId())) {
-                throw new IllegalArgumentException("task placed in Epic that you are trying to add is missing from the manager");
+                throw new IllegalArgumentException("Epic that you are trying to add is missing from the manager");
             }
         }
         epics.put(epic.getId(), epic);
@@ -83,23 +89,37 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task getTaskById(int id) {
+    public Task getTaskById(int id) throws IllegalArgumentException {
         Task task = tasks.get(id);
-        history.add(task);
+        if (task != null) {
+            history.add(task);
+        } else {
+            throw new IllegalArgumentException("Task with id " + id + " does not exist");
+        }
+
         return task;
     }
 
     @Override
-    public SubTask getSubTaskById(int id) {
+    public SubTask getSubTaskById(int id) throws IllegalArgumentException {
         SubTask subTask = subTasks.get(id);
-        history.add(subTask);
+        if(subTask != null) {
+            history.add(subTask);
+        } else {
+            throw new IllegalArgumentException("Subtask with id " + id + " does not exist");
+        }
+
         return subTask;
     }
 
     @Override
-    public Epic getEpicById(int id) {
+    public Epic getEpicById(int id) throws IllegalArgumentException {
         Epic epic = epics.get(id);
-        history.add(epic);
+        if(epic != null) {
+            history.add(epic);
+        } else {
+            throw new IllegalArgumentException("Epic with id " + id + " does not exist");
+        }
         return epic;
     }
 
@@ -145,7 +165,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (epic != null) {
             return epics.get(id).getSubTasks();
         } else {
-            System.out.println("Epic with id " + id + " does not exist");
+            System.out.println("tasks.Epic with id " + id + " does not exist");
             return null;
         }
     }

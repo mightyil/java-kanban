@@ -1,4 +1,8 @@
 import org.junit.jupiter.api.Test;
+import tasks.Epic;
+import tasks.SubTask;
+import tasks.Task;
+import tasks.TaskStatus;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,15 +31,15 @@ public class TaskTest {
     }
 
     /*
-    * "проверьте, что объект Epic нельзя добавить в самого себя в виде подзадачи"
+    * "проверьте, что объект tasks.Epic нельзя добавить в самого себя в виде подзадачи"
     * Реализация данной проверки невозможна, т.к. метод добавления подзадачи
-    * принимает аргумент типа SubTask
+    * принимает аргумент типа tasks.SubTask
     */
 
     /*
      * "проверьте, что объект Subtask нельзя сделать своим же эпиком"
      * Реализация данной проверки невозможна, т.к. метод добавления эпика
-     * и конструктор принимают аргумент типа Epic
+     * и конструктор принимают аргумент типа tasks.Epic
      */
 
     @Test
