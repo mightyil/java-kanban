@@ -52,6 +52,6 @@ public class HistoryManagersTest {
             manager.getTaskById(1);
         }
 
-        assertEquals(10, manager.getHistory().size(), "Размер больше 10");
+        assertEquals(1, manager.getHistory().size(), "Размер больше 10");
     }
 }

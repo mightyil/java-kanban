@@ -20,8 +20,10 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
-        removeNode(hashHistory.get(id));
-        hashHistory.remove(id);
+        if (hashHistory.containsKey(id)) {
+            removeNode(hashHistory.get(id));
+            hashHistory.remove(id);
+        }
     }
 
     @Override
