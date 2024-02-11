@@ -5,7 +5,9 @@ import tasks.Task;
 import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private final Map<Integer, Task> hashHistory = new HashMap<>();
+    private final Map<Integer, Node> hashHistory = new HashMap<>();
+    private Node head = null;
+    private Node tail = null;
 
     @Override
     public void add(Task task) {
@@ -19,6 +21,22 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public List<Task> getHistory() {
+        return null;
+    }
+
+    private void linkLast(Task task) {
+        Node newNode = new Node(task);
+        if (tail != null) {
+            newNode.prev = tail;
+            tail.next = newNode;
+        } else {
+            head = newNode;
+        }
+        tail = newNode;
+        hashHistory.put(task.getId(), newNode);
+    }
+
+    private List<Task> getTasks() {
         return null;
     }
 
