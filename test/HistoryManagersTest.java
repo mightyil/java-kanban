@@ -44,7 +44,7 @@ public class HistoryManagersTest {
     }
 
     @Test
-    void shouldBeCorrectSize() {
+    void shouldNotRepeated() {
         Task task = new Task("task one", "description of task one", TaskStatus.NEW);
         manager.createTask(task);
 
@@ -52,6 +52,38 @@ public class HistoryManagersTest {
             manager.getTaskById(1);
         }
 
-        assertEquals(1, manager.getHistory().size(), "Размер больше 10");
+        assertEquals(1, manager.getHistory().size(), "Размер не соответствует");
+    }
+
+    @Test
+    void shouldBeUnlimited() {
+        for (int i = 1; i <= 150; i++) {
+            manager.createTask(new Task("task " + i, "description of task " + i, TaskStatus.NEW));
+            manager.getTaskById(i);
+        }
+
+        assertEquals(150, manager.getHistory().size(), "Размер не соответствует");
+    }
+
+    @Test
+    void shouldCorrectDeleteLast() {
+        for (int i = 1; i <= 15; i++) {
+            manager.createTask(new Task("task " + i, "description of task " + i, TaskStatus.NEW));
+            manager.getTaskById(i);
+        }
+        manager.deleteTaskById(15);
+
+        assertEquals(14, manager.getHistory().get(13).getId(), "Последний элемент не соответствует");
+    }
+
+    @Test
+    void shouldCorrectDeleteFirst() {
+        for (int i = 1; i <= 15; i++) {
+            manager.createTask(new Task("task " + i, "description of task " + i, TaskStatus.NEW));
+            manager.getTaskById(i);
+        }
+        manager.deleteTaskById(1);
+
+        assertEquals(2, manager.getHistory().get(0).getId(), "Первый элемент не соответствует");
     }
 }
