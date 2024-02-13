@@ -21,7 +21,6 @@ public class InMemoryTaskManager implements TaskManager {
         clearTasks();
         clearEpics();
         clearSubTasks();
-        history = Managers.getDefaultHistory();
     }
 
     @Override
