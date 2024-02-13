@@ -1,5 +1,6 @@
 package managers;
 
+import managers.history.HistoryManager;
 import tasks.*;
 
 import java.util.ArrayList;
@@ -25,12 +26,14 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteTaskById(int id) {
         tasks.remove(id);
+        history.remove(id);
     }
 
     @Override
     public void deleteSubTaskById(int id) {
         SubTask deletedSubTask = subTasks.get(id);
         subTasks.remove(id);
+        history.remove(id);
         deletedSubTask.getOwner().deleteSubTask(deletedSubTask);
     }
 
@@ -38,9 +41,12 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteEpicById(int id) {
         Epic deletedEpic = epics.get(id);
         for (SubTask subTask : deletedEpic.getSubTasks()) {
-            subTasks.remove(subTask.getId());
+            int subId = subTask.getId();
+            subTasks.remove(subId);
+            history.remove(subId);
         }
         epics.remove(id);
+        history.remove(id);
     }
 
     @Override
