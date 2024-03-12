@@ -12,7 +12,7 @@ public class Managers {
     }
 
     public static TaskManager getDefault() {
-        File file = new File("save.csv");
+        File file = new File("src/data/save.csv");
         return new FileBackedTaskManager(file);
     }
 
