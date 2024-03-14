@@ -26,12 +26,15 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             writeTasks(writer, getTasks());
             writeTasks(writer, getEpics());
             writeTasks(writer, getSubTasks());
+
+            writer.write("\n");
+            writer.write(historyToString(history));
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка записи файла");
         }
     }
 
-    private <T> void writeTasks(FileWriter writer, List<T> tasks) throws IOException {
+    private <T extends Task> void writeTasks(FileWriter writer, List<T> tasks) throws IOException {
         for (T task : tasks) {
             writer.write(toString((Task) task) + "\n");
         }
@@ -65,8 +68,19 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     static String historyToString(HistoryManager history) {
+        StringBuilder result = new StringBuilder();
+        List<Task> historyList = history.getHistory();
+        int i = 0;
+        int historySize = historyList.size();
 
-        return null;
+        for (Task task : historyList) {
+            result.append(task.getId());
+            if(++i != historySize) {
+                result.append(",");
+            }
+        }
+
+        return result.toString();
     }
 
     static List<Integer> historyFromString(String value) {
