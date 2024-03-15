@@ -14,7 +14,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     protected HistoryManager history = Managers.getDefaultHistory();
 
-    private int lastId = 0;
+    protected int lastId = 0;
 
     @Override
     public void deleteAll() {
@@ -62,12 +62,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateEpic(Epic epic) throws IllegalArgumentException{
-        for (SubTask subTask : epics.get(epic.getId()).getSubTasks()) {
-            epic.updateSubTask(subTask);
-        }
-        for (SubTask subTask : epic.getSubTasks()) {
-            if (!subTasks.containsKey(subTask.getId())) {
-                throw new IllegalArgumentException("Epic that you are trying to add is missing from the manager");
+        if(epics.containsKey(epic.getId())) {
+            for (SubTask subTask : epics.get(epic.getId()).getSubTasks()) {
+                epic.updateSubTask(subTask);
+            }
+            for (SubTask subTask : epic.getSubTasks()) {
+                if (!subTasks.containsKey(subTask.getId())) {
+                    throw new IllegalArgumentException("Subtask that you are trying to add is missing from the manager");
+                }
             }
         }
         epics.put(epic.getId(), epic);
@@ -179,6 +181,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     public List<Task> getHistory() {
         return history.getHistory();
+    }
+
+    protected Epic getEpic(int id) {
+        return epics.get(id);
     }
 
 }

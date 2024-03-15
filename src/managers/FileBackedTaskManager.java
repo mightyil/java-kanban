@@ -3,9 +3,7 @@ package managers;
 import managers.history.HistoryManager;
 import tasks.*;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -60,8 +58,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         result.append(",").append(task.getDescription());
         result.append(",");
 
-        if (task instanceof SubTask) {
-            SubTask sub = (SubTask) task;
+        if (task instanceof SubTask sub) {
             result.append(sub.getOwner().getId());
         }
         return result.toString();
@@ -88,9 +85,48 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return null;
     }
 
-    static FileBackedTaskManager loadFromFile(File file) {
+    public static FileBackedTaskManager loadFromFile(File file) throws IllegalStateException {
+        FileBackedTaskManager manager = new FileBackedTaskManager(file);
+        try (BufferedReader reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
+            String line = "";
+            reader.readLine();
+            while (reader.ready()) {
+                line = reader.readLine();
+                if (!line.isEmpty()) {
+                    String[] params = line.split(",");
+                    int id = Integer.parseInt(params[0]);
+                    String type = params[1];
+                    String name = params[2];
+                    TaskStatus status = switch(params[3]) {
+                        case "NEW" -> TaskStatus.NEW;
+                        case "IN_PROGRESS" -> TaskStatus.IN_PROGRESS;
+                        case "DONE" -> TaskStatus.DONE;
+                        default ->
+                            throw new IllegalStateException("Unexpected value: " + params[3]);
+                    };
+                    String descr = params[4];
 
-        return null;
+                    switch (type) {
+                        case "TASK" ->
+                            manager.updateTaskWithoutSave(new Task(name, descr, id, status)) ;
+                        case "EPIC" ->
+                            manager.updateEpicWithoutSave(new Epic(name, descr, id));
+                        case "SUBTASK" ->
+                            manager.updateSubTaskWithoutSave(new SubTask(name, descr, id, status,
+                                    manager.getEpic(Integer.parseInt(params[5]))));
+                        default ->
+                            throw new IllegalStateException("Unexpected value: " + type);
+                    }
+
+                } else {
+                    reader.readLine();
+                    historyFromString(reader.readLine());
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return manager;
     }
 
     @Override
@@ -154,6 +190,18 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         int result = super.createSubTask(subTask);
         save();
         return result;
+    }
+
+    public void updateTaskWithoutSave(Task task) {
+        super.updateTask(task);
+    }
+
+    public void updateSubTaskWithoutSave(SubTask subTask) {
+        super.updateSubTask(subTask);
+    }
+
+    public void updateEpicWithoutSave(Epic epic) {
+        super.updateEpic(epic);
     }
 }
 
