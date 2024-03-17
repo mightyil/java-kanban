@@ -70,7 +70,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
         for (Task task : historyList) {
             result.append(task.getId());
-            if(++i != historySize) {
+            if (++i != historySize) {
                 result.append(",");
             }
         }
@@ -99,7 +99,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     int id = Integer.parseInt(params[0]);
                     String type = params[1];
                     String name = params[2];
-                    TaskStatus status = switch(params[3]) {
+                    TaskStatus status = switch (params[3]) {
                         case "NEW" -> TaskStatus.NEW;
                         case "IN_PROGRESS" -> TaskStatus.IN_PROGRESS;
                         case "DONE" -> TaskStatus.DONE;
@@ -110,7 +110,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
                     switch (type) {
                         case "TASK" ->
-                            manager.updateTaskWithoutSave(new Task(name, descr, id, status)) ;
+                            manager.updateTaskWithoutSave(new Task(name, descr, id, status));
                         case "EPIC" ->
                             manager.updateEpicWithoutSave(new Epic(name, descr, id));
                         case "SUBTASK" ->
