@@ -1,6 +1,6 @@
 package tasks;
 
-public class SubTask extends Task{
+public class SubTask extends Task {
     private Epic owner;
 
     public SubTask(String name, String description, int id, TaskStatus status, Epic owner) {
