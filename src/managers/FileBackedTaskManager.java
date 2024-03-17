@@ -5,6 +5,7 @@ import tasks.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
@@ -38,10 +39,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    public Task fromString(String str) {
 
-        return null;
-    }
 
     private String toString(Task task) {
         StringBuilder result = new StringBuilder();
@@ -80,10 +78,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return result.toString();
     }
 
-    static List<Integer> historyFromString(String value) {
-
-        return null;
+    private static List<Integer> historyFromString(String value) {
+        List<Integer> result = new ArrayList<>();
+        for (String id : value.split(",")) {
+            result.add(Integer.parseInt(id));
+        }
+        return result;
     }
+
 
     public static FileBackedTaskManager loadFromFile(File file) throws IllegalStateException {
         FileBackedTaskManager manager = new FileBackedTaskManager(file);
@@ -113,14 +115,20 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                             manager.updateEpicWithoutSave(new Epic(name, descr, id));
                         case "SUBTASK" ->
                             manager.updateSubTaskWithoutSave(new SubTask(name, descr, id, status,
-                                    manager.getEpic(Integer.parseInt(params[5]))));
+                                    (Epic) manager.getTask(Integer.parseInt(params[5]))));
                         default ->
                             throw new IllegalStateException("Unexpected value: " + type);
                     }
-
+                    if (id > manager.lastId) {
+                        manager.lastId = id;
+                    }
                 } else {
-                    reader.readLine();
-                    historyFromString(reader.readLine());
+                    String history = reader.readLine();
+                    if (history != null) {
+                        for (int id : historyFromString(history)) {
+                            manager.history.add(manager.getTask(id));
+                        }
+                    }
                 }
             }
         } catch (IOException e) {
@@ -190,6 +198,27 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         int result = super.createSubTask(subTask);
         save();
         return result;
+    }
+
+    @Override
+    public Task getTaskById(int id) throws IllegalArgumentException {
+        Task task = super.getTaskById(id);
+        save();
+        return task;
+    }
+
+    @Override
+    public SubTask getSubTaskById(int id) throws IllegalArgumentException {
+        SubTask subTask = super.getSubTaskById(id);
+        save();
+        return subTask;
+    }
+
+    @Override
+    public Epic getEpicById(int id) throws IllegalArgumentException {
+        Epic epic = super.getEpicById(id);
+        save();
+        return epic;
     }
 
     public void updateTaskWithoutSave(Task task) {

@@ -174,7 +174,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (epic != null) {
             return epics.get(id).getSubTasks();
         } else {
-            System.out.println("tasks.Epic with id " + id + " does not exist");
+            System.out.println("Epic with id " + id + " does not exist");
             return null;
         }
     }
@@ -183,8 +183,16 @@ public class InMemoryTaskManager implements TaskManager {
         return history.getHistory();
     }
 
-    protected Epic getEpic(int id) {
-        return epics.get(id);
+    protected Task getTask(int id) throws IllegalArgumentException {
+        if (tasks.containsKey(id)) {
+            return tasks.get(id);
+        } else if (epics.containsKey(id)) {
+            return epics.get(id);
+        } else if (subTasks.containsKey(id)) {
+            return subTasks.get(id);
+        } else {
+            throw new IllegalArgumentException("Task with id " + id + " does not exist");
+        }
     }
 
 }
