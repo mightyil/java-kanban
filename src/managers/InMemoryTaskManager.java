@@ -61,8 +61,8 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateEpic(Epic epic) throws IllegalArgumentException{
-        if(epics.containsKey(epic.getId())) {
+    public void updateEpic(Epic epic) throws IllegalArgumentException {
+        if (epics.containsKey(epic.getId())) {
             for (SubTask subTask : epics.get(epic.getId()).getSubTasks()) {
                 epic.updateSubTask(subTask);
             }
@@ -112,7 +112,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public SubTask getSubTaskById(int id) throws IllegalArgumentException {
         SubTask subTask = subTasks.get(id);
-        if(subTask != null) {
+        if (subTask != null) {
             history.add(subTask);
         } else {
             throw new IllegalArgumentException("Subtask with id " + id + " does not exist");
@@ -124,7 +124,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Epic getEpicById(int id) throws IllegalArgumentException {
         Epic epic = epics.get(id);
-        if(epic != null) {
+        if (epic != null) {
             history.add(epic);
         } else {
             throw new IllegalArgumentException("Epic with id " + id + " does not exist");
