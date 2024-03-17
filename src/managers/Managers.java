@@ -3,8 +3,6 @@ package managers;
 import managers.history.HistoryManager;
 import managers.history.InMemoryHistoryManager;
 
-import java.io.File;
-
 public class Managers {
 
     public static HistoryManager getDefaultHistory() {
