@@ -1,10 +1,14 @@
 package managers;
 
+import managers.customExceptions.ManagerLoadException;
+import managers.customExceptions.ManagerSaveException;
 import managers.history.HistoryManager;
 import tasks.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +23,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private void save() throws ManagerSaveException {
         final String parameters = "id,type,name,status,description,epic";
-        try (FileWriter writer = new FileWriter(file, StandardCharsets.UTF_8)) {
+        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(file.toURI()), StandardCharsets.UTF_8)) {
             writer.write(parameters + "\n");
 
             writeTasks(writer, getTasks());
@@ -33,7 +37,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    private <T extends Task> void writeTasks(FileWriter writer, List<T> tasks) throws IOException {
+    private <T extends Task> void writeTasks(BufferedWriter writer, List<T> tasks) throws IOException {
         for (T task : tasks) {
             writer.write(toString((Task) task) + "\n");
         }
@@ -89,7 +93,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public static FileBackedTaskManager loadFromFile(File file) throws IllegalStateException {
         FileBackedTaskManager manager = new FileBackedTaskManager(file);
-        try (BufferedReader reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
+        try (BufferedReader reader = Files.newBufferedReader(Paths.get(file.toURI()), StandardCharsets.UTF_8)) {
             String line = "";
             reader.readLine();
             while (reader.ready()) {
@@ -132,7 +136,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ManagerLoadException("Ошибка чтения файла");
         }
         return manager;
     }
