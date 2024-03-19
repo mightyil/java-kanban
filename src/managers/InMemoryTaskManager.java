@@ -12,9 +12,9 @@ public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
     private final HashMap<Integer, Epic> epics = new HashMap<>();
 
-    HistoryManager history = Managers.getDefaultHistory();
+    protected HistoryManager history = Managers.getDefaultHistory();
 
-    private int lastId = 0;
+    protected int lastId = 0;
 
     @Override
     public void deleteAll() {
@@ -61,13 +61,15 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateEpic(Epic epic) throws IllegalArgumentException{
-        for (SubTask subTask : epics.get(epic.getId()).getSubTasks()) {
-            epic.updateSubTask(subTask);
-        }
-        for (SubTask subTask : epic.getSubTasks()) {
-            if (!subTasks.containsKey(subTask.getId())) {
-                throw new IllegalArgumentException("Epic that you are trying to add is missing from the manager");
+    public void updateEpic(Epic epic) throws IllegalArgumentException {
+        if (epics.containsKey(epic.getId())) {
+            for (SubTask subTask : epics.get(epic.getId()).getSubTasks()) {
+                epic.updateSubTask(subTask);
+            }
+            for (SubTask subTask : epic.getSubTasks()) {
+                if (!subTasks.containsKey(subTask.getId())) {
+                    throw new IllegalArgumentException("Subtask that you are trying to add is missing from the manager");
+                }
             }
         }
         epics.put(epic.getId(), epic);
@@ -110,7 +112,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public SubTask getSubTaskById(int id) throws IllegalArgumentException {
         SubTask subTask = subTasks.get(id);
-        if(subTask != null) {
+        if (subTask != null) {
             history.add(subTask);
         } else {
             throw new IllegalArgumentException("Subtask with id " + id + " does not exist");
@@ -122,7 +124,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Epic getEpicById(int id) throws IllegalArgumentException {
         Epic epic = epics.get(id);
-        if(epic != null) {
+        if (epic != null) {
             history.add(epic);
         } else {
             throw new IllegalArgumentException("Epic with id " + id + " does not exist");
@@ -172,13 +174,25 @@ public class InMemoryTaskManager implements TaskManager {
         if (epic != null) {
             return epics.get(id).getSubTasks();
         } else {
-            System.out.println("tasks.Epic with id " + id + " does not exist");
+            System.out.println("Epic with id " + id + " does not exist");
             return null;
         }
     }
 
     public List<Task> getHistory() {
         return history.getHistory();
+    }
+
+    protected Task getTask(int id) throws IllegalArgumentException {
+        if (tasks.containsKey(id)) {
+            return tasks.get(id);
+        } else if (epics.containsKey(id)) {
+            return epics.get(id);
+        } else if (subTasks.containsKey(id)) {
+            return subTasks.get(id);
+        } else {
+            throw new IllegalArgumentException("Task with id " + id + " does not exist");
+        }
     }
 
 }

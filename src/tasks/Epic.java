@@ -3,7 +3,7 @@ package tasks;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Epic extends Task{
+public class Epic extends Task {
     private final HashMap<Integer, SubTask> tasks;
 
     public Epic(String name, String description, int id) {

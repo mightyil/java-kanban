@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Main {
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
 
         TaskManager manager = Managers.getDefault();
 
@@ -62,12 +62,6 @@ public class Main {
 
         System.out.println("Удалим задачу с id 2");
         manager.deleteTaskById(2);
-
-        System.out.println("История:");
-        printList(manager.getHistory());
-
-        System.out.println("Удалим эпик с подзадачами");
-        manager.deleteEpicById(4);
 
         System.out.println("История:");
         printList(manager.getHistory());
